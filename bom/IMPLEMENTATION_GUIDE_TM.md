@@ -8,11 +8,10 @@
 
 ```text
 bom/
-├── __init__.py
 ├── app.py                              # изменён: импорт моделей и регистрация API
-├── technology_routes.py                # новый REST API
+├── technology_routes.py                # REST API
+├── seed_technology.py                  # заполнение учебного маршрута
 ├── models/
-│   ├── __init__.py
 │   ├── product.py                      # изменён: связь Product -> ProductOperation
 │   ├── product_operation.py            # ProductOperation, PurchasePosition, RoutePosition, Qualification
 │   ├── input_resource_position.py      # входной ресурс: OUT_TO, IN_TO, Q, FOR_Q, Unit

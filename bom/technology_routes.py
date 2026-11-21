@@ -44,7 +44,7 @@ def _json_data():
 
 def _required_id(data, key):
     value = data.get(key)
-    if isinstance(value, bool):
+    if isinstance(value, (bool, float)):
         raise ValueError(f"Поле {key} должно быть целым числом")
     try:
         result = int(value)
@@ -61,8 +61,7 @@ def _positive_decimal(value, field_name, allow_zero=False):
     except (InvalidOperation, TypeError, ValueError):
         raise ValueError(f"Поле {field_name} должно быть числом")
 
-    min_is_valid = result >= 0 if allow_zero else result > 0
-    if not result.is_finite() or not min_is_valid:
+    if not result.is_finite() or result < 0 or (not allow_zero and result == 0):
         phrase = "не может быть отрицательным" if allow_zero else "должно быть больше нуля"
         raise ValueError(f"Поле {field_name} {phrase}")
     return result
@@ -162,7 +161,7 @@ def add_operation_class():
             raise ValueError("Поле name обязательно")
         parent_id = data.get("parent_id")
         if parent_id is not None:
-            parent_id = int(parent_id)
+            parent_id = _required_id(data, "parent_id")
             _get_or_404(OperationClassifier, parent_id, "Родительский класс")
         item = OperationClassifier(name=name, parent_id=parent_id)
         db.session.add(item)
